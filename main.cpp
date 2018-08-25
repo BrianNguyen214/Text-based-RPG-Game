@@ -706,7 +706,7 @@ void displayBattleStatsStage2(Warrior Warr, Mage Mag, Archer Arch, Skeleton skel
 
     string barrierLine;
     if (Arch.barrierBuffOn == false)
-        barrierLine = "||                                                           ||";
+        barrierLine = "||                                                              ||";
     if (Arch.barrierBuffOn == true)
         barrierLine = "|| **Barrier Activated** (Turns Left: " + bt.str() + ")                     ||";
 
@@ -1698,15 +1698,19 @@ may read to know more about the (made-up) "lore" of game
         }
 
         string continueStory = "f";
+        bool wentThroughStory = false;
+        int numLinesOfStoryCompleted = 0;
         if (listen == "yes")
         {
             cout << "Thank you. Here's the story" << endl;
-            cout << "**                                                                          **" << endl;
-            cout << "(Press the f letter then Enter to continue or the d letter then Enter to exit)" << endl;
-            cout << "**                                                                          **" << endl;
+            cout << "**                                                                            **" << endl;
+            cout << "*(Press the f letter then Enter to continue or the d letter then Enter to exit)*" << endl;
+            cout << "**                                                                            **" << endl;
             cout << endl;
-            int x = 0;
-            while (x < 14)
+            //int x = 0;
+            wentThroughStory = true;
+
+            while (numLinesOfDialogueCompleted < 14)
             {
                 if (continueStory == "f")
                 {
@@ -1715,7 +1719,7 @@ may read to know more about the (made-up) "lore" of game
                     cout << line;
                     cin >> continueStory;
                     cout << endl;
-                    x++;
+                    numLinesOfDialogueCompleted++;
                 }
                 else if (continueStory == "d")
                 {
@@ -1748,6 +1752,15 @@ may read to know more about the (made-up) "lore" of game
                 getline(Dialogue, line);
             }
             cout << "Alright. Let's dive into the game." << endl;
+        }
+
+        if (wentThroughStory == true)
+        {
+            int numLinesNeedToComplete = 14 - numLinesOfDialogueCompleted;
+            for (int i = 0; i < numLinesNeedToComplete; i++)
+            {
+                getline(Dialogue, line);
+            }
         }
 
         numLinesOfDialogueCompleted = 14;
@@ -1851,368 +1864,374 @@ will do as is stated based off of its description
 * Then a brief description of the hero's action is stated and the
 display of the stage is shown
 */
-        userArcher.checkIfBarrierOn();
+            userArcher.checkIfBarrierOn();
 
-        // Warrior's Turn /
-        if (userWarrior.isHeroAlive == true)
-        {
-            userWarrior.callBattleMenu();
-            userWarrior.checkIfEnraged();
-            if (userWarrior.enemyAttacked == 1)
+            // Warrior's Turn /
+            userWarrior.check_set_HeroAlive();
+            if (userWarrior.isHeroAlive == true)
             {
-                dmgEnemyTakes = heroNetBattleDamage(userWarrior.baseAtkDmg, slimeOne.armor);
-                slimeOne.currentHealth = slimeOne.currentHealth - dmgEnemyTakes;
-                if (slimeOne.currentHealth <= 0)
-                    slimeOne.currentHealth = 0;
-                slimeOne.check_set_EnemyAlive();
-                cout << userWarrior.warName << " used " << userWarrior.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                userWarrior.callBattleMenu();
+                userWarrior.checkIfEnraged();
+                if (userWarrior.enemyAttacked == 1)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userWarrior.baseAtkDmg, slimeOne.armor);
+                    slimeOne.currentHealth = slimeOne.currentHealth - dmgEnemyTakes;
+                    if (slimeOne.currentHealth <= 0)
+                        slimeOne.currentHealth = 0;
+                    slimeOne.check_set_EnemyAlive();
+                    cout << userWarrior.warName << " used " << userWarrior.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userWarrior.enemyAttacked == 2)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userWarrior.baseAtkDmg, slimeTwo.armor);
+                    slimeTwo.currentHealth = slimeTwo.currentHealth - dmgEnemyTakes;
+                    if (slimeTwo.currentHealth <= 0)
+                        slimeTwo.currentHealth = 0;
+                    slimeTwo.check_set_EnemyAlive();
+                    cout << userWarrior.warName << " used " << userWarrior.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userWarrior.enemyAttacked == 3)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userWarrior.baseAtkDmg, slimeThree.armor);
+                    slimeThree.currentHealth = slimeThree.currentHealth - dmgEnemyTakes;
+                    if (slimeThree.currentHealth <= 0)
+                        slimeThree.currentHealth = 0;
+                    slimeThree.check_set_EnemyAlive();
+                    cout << userWarrior.warName << " used " << userWarrior.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userWarrior.enemyAttacked == 4)
+                {
+                    cout << userWarrior.warName << " used " << userWarrior.moveUsed << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if(userWarrior.enemyAttacked == -5)
+                {
+                    cout << userWarrior.warName << " used Skip Turn " << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+
+                userWarrior.stablizeStats();
+                if (userEnemiesS1.areEnemiesAlive(slimeOne, slimeTwo, slimeThree) == false)
+                {
+                    cout << "The enemies have been vanquished" << endl;
+                    stageCompleted = true;
+                    break;
+                }
             }
-            else if (userWarrior.enemyAttacked == 2)
+
+    /** The stage will be immediately finished if during that hero's turn they finish off the
+    last enemy
+    */
+
+            // Mage's Turn /
+            userMage.check_set_HeroAlive();
+            if (userMage.isHeroAlive == true)
             {
-                dmgEnemyTakes = heroNetBattleDamage(userWarrior.baseAtkDmg, slimeTwo.armor);
-                slimeTwo.currentHealth = slimeTwo.currentHealth - dmgEnemyTakes;
-                if (slimeTwo.currentHealth <= 0)
-                    slimeTwo.currentHealth = 0;
-                slimeTwo.check_set_EnemyAlive();
-                cout << userWarrior.warName << " used " << userWarrior.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                userMage.callBattleMenu();
+                if (userMage.enemyAttacked == 1)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userMage.baseMagDmg, slimeOne.mag_armor);
+                    slimeOne.currentHealth = slimeOne.currentHealth - dmgEnemyTakes;
+                    if (slimeOne.currentHealth <= 0)
+                        slimeOne.currentHealth = 0;
+                    slimeOne.check_set_EnemyAlive();
+                    cout << userMage.mageName << " used " << userMage.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userMage.enemyAttacked == 2)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userMage.baseMagDmg, slimeTwo.mag_armor);
+                    slimeTwo.currentHealth = slimeTwo.currentHealth - dmgEnemyTakes;
+                    if (slimeTwo.currentHealth <= 0)
+                        slimeTwo.currentHealth = 0;
+                    slimeTwo.check_set_EnemyAlive();
+                    cout << userMage.mageName << " used " << userMage.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userMage.enemyAttacked == 3)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userMage.baseMagDmg, slimeThree.mag_armor);
+                    slimeThree.currentHealth = slimeThree.currentHealth - dmgEnemyTakes;
+                    if (slimeThree.currentHealth <= 0)
+                        slimeThree.currentHealth = 0;
+                    slimeThree.check_set_EnemyAlive();
+                    cout << userMage.mageName << " used " << userMage.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userMage.enemyAttacked == 0)
+                {
+                    userWarrior.checkIfHealed(userMage);
+                    userArcher.checkIfHealed(userMage);
+
+                    if (userMage.healedWarr == true)
+                    {
+                        cout << userMage.mageName << " used " << userMage.moveUsed << " on (Warrior) " << userWarrior.warName << " (+"
+                            << userMage.amtHealedWarr << " hp)" << endl;
+                    }
+                    if (userMage.healedArch == true)
+                    {
+                        cout << userMage.mageName << " used " << userMage.moveUsed << " on (Archer) " << userArcher.archName << " (+"
+                            << userMage.amtHealedArch << " hp)" << endl;
+                    }
+                    if (userMage.healedMage == true)
+                    {
+                        cout << userMage.mageName << " used " << userMage.moveUsed << " on herself (+"
+                            << userMage.amtHealedMage << " hp)" << endl;
+                    }
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userMage.enemyAttacked == -1)
+                {
+                    userWarrior.checkIfHealed(userMage);
+                    userArcher.checkIfHealed(userMage);
+
+                    cout << userMage.mageName << " used " << userMage.moveUsed << " (+"
+                            << userMage.MagDmg << " hp to all)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userMage.enemyAttacked == -2)
+                {
+                    userWarrior.checkIfRevived(userMage);
+                    userArcher.checkIfRevived(userMage);
+
+                    if (userMage.revivedWarr == true)
+                    {
+                        cout << userMage.mageName << " used " << userMage.moveUsed << " on (Warrior) " << userWarrior.warName << " (+"
+                            << userMage.MagDmg << " hp)" << endl;
+                    }
+                    if (userMage.revivedArch == true)
+                    {
+                        cout << userMage.mageName << " used " << userMage.moveUsed << " on (Archer) " << userArcher.archName << " (+"
+                            << userMage.MagDmg << " hp)" << endl;
+                    }
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if(userMage.enemyAttacked == -5)
+                {
+                    cout << userMage.mageName << " used Skip Turn " << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+
+                userMage.stablizeStats();
+                if (userEnemiesS1.areEnemiesAlive(slimeOne, slimeTwo, slimeThree) == false)
+                {
+                    cout << "The enemies have been vanquished" << endl;
+                    stageCompleted = true;
+                    break;
+                }
             }
-            else if (userWarrior.enemyAttacked == 3)
+
+            // Archer's Turn /
+            userArcher.check_set_HeroAlive();
+            if (userArcher.isHeroAlive == true)
             {
-                dmgEnemyTakes = heroNetBattleDamage(userWarrior.baseAtkDmg, slimeThree.armor);
-                slimeThree.currentHealth = slimeThree.currentHealth - dmgEnemyTakes;
-                if (slimeThree.currentHealth <= 0)
+                userArcher.callBattleMenu();
+                if (userArcher.enemyAttacked == 1)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userArcher.baseAtkDmg, slimeOne.armor);
+                    slimeOne.currentHealth = slimeOne.currentHealth - dmgEnemyTakes;
+                    if (slimeOne.currentHealth <= 0)
+                        slimeOne.currentHealth = 0;
+                    slimeOne.check_set_EnemyAlive();
+                    cout << userArcher.archName << " used " << userArcher.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userArcher.enemyAttacked == 2)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userArcher.baseAtkDmg, slimeTwo.armor);
+                    slimeTwo.currentHealth = slimeTwo.currentHealth - dmgEnemyTakes;
+                    if (slimeTwo.currentHealth <= 0)
+                        slimeTwo.currentHealth = 0;
+                    slimeTwo.check_set_EnemyAlive();
+                    cout << userArcher.archName << " used " << userArcher.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                }
+                else if (userArcher.enemyAttacked == 3)
+                {
+                    dmgEnemyTakes = heroNetBattleDamage(userArcher.baseAtkDmg, slimeThree.armor);
+                    slimeThree.currentHealth = slimeThree.currentHealth - dmgEnemyTakes;
+                    if (slimeThree.currentHealth <= 0)
                     slimeThree.currentHealth = 0;
-                slimeThree.check_set_EnemyAlive();
-                cout << userWarrior.warName << " used " << userWarrior.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userWarrior.enemyAttacked == 4)
-            {
-                cout << userWarrior.warName << " used " << userWarrior.moveUsed << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if(userWarrior.enemyAttacked == -5)
-            {
-                cout << userWarrior.warName << " used Skip Turn " << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-
-            userWarrior.stablizeStats();
-            if (userEnemiesS1.areEnemiesAlive(slimeOne, slimeTwo, slimeThree) == false)
-            {
-                cout << "The enemies have been vanquished" << endl;
-                stageCompleted = true;
-                break;
-            }
-        }
-
-/** The stage will be immediately finished if during that hero's turn they finish off the
-last enemy
-*/
-
-        // Mage's Turn /
-        if (userMage.isHeroAlive == true)
-        {
-            userMage.callBattleMenu();
-            if (userMage.enemyAttacked == 1)
-            {
-                dmgEnemyTakes = heroNetBattleDamage(userMage.baseMagDmg, slimeOne.mag_armor);
-                slimeOne.currentHealth = slimeOne.currentHealth - dmgEnemyTakes;
-                if (slimeOne.currentHealth <= 0)
-                    slimeOne.currentHealth = 0;
-                slimeOne.check_set_EnemyAlive();
-                cout << userMage.mageName << " used " << userMage.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userMage.enemyAttacked == 2)
-            {
-                dmgEnemyTakes = heroNetBattleDamage(userMage.baseMagDmg, slimeTwo.mag_armor);
-                slimeTwo.currentHealth = slimeTwo.currentHealth - dmgEnemyTakes;
-                if (slimeTwo.currentHealth <= 0)
-                    slimeTwo.currentHealth = 0;
-                slimeTwo.check_set_EnemyAlive();
-                cout << userMage.mageName << " used " << userMage.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userMage.enemyAttacked == 3)
-            {
-                dmgEnemyTakes = heroNetBattleDamage(userMage.baseMagDmg, slimeThree.mag_armor);
-                slimeThree.currentHealth = slimeThree.currentHealth - dmgEnemyTakes;
-                if (slimeThree.currentHealth <= 0)
-                    slimeThree.currentHealth = 0;
-                slimeThree.check_set_EnemyAlive();
-                cout << userMage.mageName << " used " << userMage.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userMage.enemyAttacked == 0)
-            {
-                userWarrior.checkIfHealed(userMage);
-                userArcher.checkIfHealed(userMage);
-
-                if (userMage.healedWarr == true)
-                {
-                    cout << userMage.mageName << " used " << userMage.moveUsed << " on (Warrior) " << userWarrior.warName << " (+"
-                         << userMage.amtHealedWarr << " hp)" << endl;
+                    slimeThree.check_set_EnemyAlive();
+                    cout << userArcher.archName << " used " << userArcher.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
                 }
-                if (userMage.healedArch == true)
+                else if (userArcher.enemyAttacked == -1)
                 {
-                    cout << userMage.mageName << " used " << userMage.moveUsed << " on (Archer) " << userArcher.archName << " (+"
-                         << userMage.amtHealedArch << " hp)" << endl;
+                    cout << userArcher.archName << " used " << userArcher.moveUsed << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
                 }
-                if (userMage.healedMage == true)
+                else if(userArcher.enemyAttacked == -5)
                 {
-                    cout << userMage.mageName << " used " << userMage.moveUsed << " on herself (+"
-                         << userMage.amtHealedMage << " hp)" << endl;
+                    cout << userArcher.archName << " used Skip Turn " << endl;
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
                 }
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userMage.enemyAttacked == -1)
-            {
-                userWarrior.checkIfHealed(userMage);
-                userArcher.checkIfHealed(userMage);
 
-                cout << userMage.mageName << " used " << userMage.moveUsed << " (+"
-                        << userMage.MagDmg << " hp to all)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userMage.enemyAttacked == -2)
-            {
-                userWarrior.checkIfRevived(userMage);
-                userArcher.checkIfRevived(userMage);
-
-                if (userMage.revivedWarr == true)
+                userArcher.stablizeStats();
+                if (userEnemiesS1.areEnemiesAlive(slimeOne, slimeTwo, slimeThree) == false)
                 {
-                    cout << userMage.mageName << " used " << userMage.moveUsed << " on (Warrior) " << userWarrior.warName << " (+"
-                         << userMage.MagDmg << " hp)" << endl;
+                    cout << "The enemies have been vanquished" << endl;
+                    stageCompleted = true;
+                    break;
                 }
-                if (userMage.revivedArch == true)
+
+                if (roundNum == 1)
                 {
-                    cout << userMage.mageName << " used " << userMage.moveUsed << " on (Archer) " << userArcher.archName << " (+"
-                         << userMage.MagDmg << " hp)" << endl;
+                    getline(Dialogue, line);
+                    cout << line;
+                    numLinesOfDialogueCompleted++;
+                    cin >> continueDialogue;
+                    cout << endl;
                 }
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if(userMage.enemyAttacked == -5)
-            {
-                cout << userMage.mageName << " used Skip Turn " << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
             }
 
-            userMage.stablizeStats();
-            if (userEnemiesS1.areEnemiesAlive(slimeOne, slimeTwo, slimeThree) == false)
-            {
-                cout << "The enemies have been vanquished" << endl;
-                stageCompleted = true;
-                break;
-            }
-        }
-
-        // Archer's Turn /
-        if (userArcher.isHeroAlive == true)
-        {
-            userArcher.callBattleMenu();
-            if (userArcher.enemyAttacked == 1)
-            {
-                dmgEnemyTakes = heroNetBattleDamage(userArcher.baseAtkDmg, slimeOne.armor);
-                slimeOne.currentHealth = slimeOne.currentHealth - dmgEnemyTakes;
-                if (slimeOne.currentHealth <= 0)
-                    slimeOne.currentHealth = 0;
-                slimeOne.check_set_EnemyAlive();
-                cout << userArcher.archName << " used " << userArcher.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userArcher.enemyAttacked == 2)
-            {
-                dmgEnemyTakes = heroNetBattleDamage(userArcher.baseAtkDmg, slimeTwo.armor);
-                slimeTwo.currentHealth = slimeTwo.currentHealth - dmgEnemyTakes;
-                if (slimeTwo.currentHealth <= 0)
-                    slimeTwo.currentHealth = 0;
-                slimeTwo.check_set_EnemyAlive();
-                cout << userArcher.archName << " used " << userArcher.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userArcher.enemyAttacked == 3)
-            {
-                dmgEnemyTakes = heroNetBattleDamage(userArcher.baseAtkDmg, slimeThree.armor);
-                slimeThree.currentHealth = slimeThree.currentHealth - dmgEnemyTakes;
-                if (slimeThree.currentHealth <= 0)
-                slimeThree.currentHealth = 0;
-                slimeThree.check_set_EnemyAlive();
-                cout << userArcher.archName << " used " << userArcher.moveUsed << " (" << dmgEnemyTakes << " dmg)" << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if (userArcher.enemyAttacked == -1)
-            {
-                cout << userArcher.archName << " used " << userArcher.moveUsed << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-            else if(userArcher.enemyAttacked == -5)
-            {
-                cout << userArcher.archName << " used Skip Turn " << endl;
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-            }
-
-            userArcher.stablizeStats();
-            if (userEnemiesS1.areEnemiesAlive(slimeOne, slimeTwo, slimeThree) == false)
-            {
-                cout << "The enemies have been vanquished" << endl;
-                stageCompleted = true;
-                break;
-            }
-
-            if (roundNum == 1)
-            {
-                getline(Dialogue, line);
-                cout << line;
-                numLinesOfDialogueCompleted++;
-                cin >> continueDialogue;
-                cout << endl;
-            }
-        }
-
-        userArcher.turnOffBarrier();
-        cout << "Press any letter to end heroes' turn ";
-        cin >> continueDialogue;
-        cout << endl;
+            userArcher.turnOffBarrier();
+            cout << "Press any letter to end heroes' turn ";
+            cin >> continueDialogue;
+            cout << endl;
 
             slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 0;
 
-/** The enemies' turns are very similar except that they will select a
-random ability and a random target
-* Of course, the enemy will always choose a target that is still currently
-alive
-*/
-        // SlimeOne's Turn /
-        if (slimeOne.isEnemyAlive == true)
-        {
-            cout << "Slime(1)'s Turn" << endl;
-            slimeOne.callRandomAbility();
-            slimeOne.selectRandomTarget(userWarrior, userMage, userArcher);
-            if (slimeOne.targettedHero == 1)
+    /** The enemies' turns are very similar except that they will select a
+    random ability and a random target
+    * Of course, the enemy will always choose a target that is still currently
+    alive
+    */
+            // SlimeOne's Turn /
+            if (slimeOne.isEnemyAlive == true)
             {
-                dmgHeroTakes = enemyNetBattleDamage(slimeOne.AtkDmg, userWarrior.armor, userArcher);
-                userWarrior.currentHealth = userWarrior.currentHealth - dmgHeroTakes;
-                cout << slimeOne.slimeName << " used " << slimeOne.abilityUsed << " on (Warrior) " << userWarrior.warName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userWarrior.currentLimit = userWarrior.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 1;
+                cout << "Slime(1)'s Turn" << endl;
+                slimeOne.callRandomAbility();
+                slimeOne.selectRandomTarget(userWarrior, userMage, userArcher);
+                if (slimeOne.targettedHero == 1)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeOne.AtkDmg, userWarrior.armor, userArcher);
+                    userWarrior.currentHealth = userWarrior.currentHealth - dmgHeroTakes;
+                    cout << slimeOne.slimeName << " used " << slimeOne.abilityUsed << " on (Warrior) " << userWarrior.warName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userWarrior.currentLimit = userWarrior.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 1;
+                }
+                else if (slimeOne.targettedHero == 2)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeOne.AtkDmg, userMage.armor, userArcher);
+                    userMage.currentHealth = userMage.currentHealth - dmgHeroTakes;
+                    cout << slimeOne.slimeName << " used " << slimeOne.abilityUsed << " on (Mage) " << userMage.mageName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userMage.currentLimit = userMage.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 1;
+                }
+                else if (slimeOne.targettedHero == 3)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeOne.AtkDmg, userArcher.armor, userArcher);
+                    userArcher.currentHealth = userArcher.currentHealth - dmgHeroTakes;
+                    cout << slimeOne.slimeName << " used " << slimeOne.abilityUsed << " on (Archer) " << userArcher.archName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userArcher.currentLimit = userArcher.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 1;
+                }
             }
-            else if (slimeOne.targettedHero == 2)
-            {
-                dmgHeroTakes = enemyNetBattleDamage(slimeOne.AtkDmg, userMage.armor, userArcher);
-                userMage.currentHealth = userMage.currentHealth - dmgHeroTakes;
-                cout << slimeOne.slimeName << " used " << slimeOne.abilityUsed << " on (Mage) " << userMage.mageName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userMage.currentLimit = userMage.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 1;
-            }
-            else if (slimeOne.targettedHero == 3)
-            {
-                dmgHeroTakes = enemyNetBattleDamage(slimeOne.AtkDmg, userArcher.armor, userArcher);
-                userArcher.currentHealth = userArcher.currentHealth - dmgHeroTakes;
-                cout << slimeOne.slimeName << " used " << slimeOne.abilityUsed << " on (Archer) " << userArcher.archName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userArcher.currentLimit = userArcher.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 1;
-            }
-        }
 
             if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
             {
                 cout << "Your heroes have been defeated" << endl;
+                stageCompleted = false;
                 break;
             }
 
-        // SlimeTwo's Turn /
-        if (slimeTwo.isEnemyAlive == true)
-        {
-            cout << "Slime(2)'s Turn" << endl;
-            slimeTwo.callRandomAbility();
-            slimeTwo.selectRandomTarget(userWarrior, userMage, userArcher);
-            if (slimeTwo.targettedHero == 1)
+            // SlimeTwo's Turn /
+            if (slimeTwo.isEnemyAlive == true)
             {
-                dmgHeroTakes = enemyNetBattleDamage(slimeTwo.AtkDmg, userWarrior.armor, userArcher);
-                userWarrior.currentHealth = userWarrior.currentHealth - dmgHeroTakes;
-                cout << slimeTwo.slimeName << " used " << slimeTwo.abilityUsed << " on (Warrior) " << userWarrior.warName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userWarrior.currentLimit = userWarrior.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 2;
+                cout << "Slime(2)'s Turn" << endl;
+                slimeTwo.callRandomAbility();
+                slimeTwo.selectRandomTarget(userWarrior, userMage, userArcher);
+                if (slimeTwo.targettedHero == 1)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeTwo.AtkDmg, userWarrior.armor, userArcher);
+                    userWarrior.currentHealth = userWarrior.currentHealth - dmgHeroTakes;
+                    cout << slimeTwo.slimeName << " used " << slimeTwo.abilityUsed << " on (Warrior) " << userWarrior.warName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userWarrior.currentLimit = userWarrior.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 2;
+                }
+                else if (slimeTwo.targettedHero == 2)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeTwo.AtkDmg, userMage.armor, userArcher);
+                    userMage.currentHealth = userMage.currentHealth - dmgHeroTakes;
+                    cout << slimeTwo.slimeName << " used " << slimeTwo.abilityUsed << " on (Mage) " << userMage.mageName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userMage.currentLimit = userMage.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 2;
+                }
+                else if (slimeTwo.targettedHero == 3)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeTwo.AtkDmg, userArcher.armor, userArcher);
+                    userArcher.currentHealth = userArcher.currentHealth - dmgHeroTakes;
+                    cout << slimeTwo.slimeName << " used " << slimeTwo.abilityUsed << " on (Archer) " << userArcher.archName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userArcher.currentLimit = userArcher.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 2;
+                }
             }
-            else if (slimeTwo.targettedHero == 2)
-            {
-                dmgHeroTakes = enemyNetBattleDamage(slimeTwo.AtkDmg, userMage.armor, userArcher);
-                userMage.currentHealth = userMage.currentHealth - dmgHeroTakes;
-                cout << slimeTwo.slimeName << " used " << slimeTwo.abilityUsed << " on (Mage) " << userMage.mageName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userMage.currentLimit = userMage.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 2;
-            }
-            else if (slimeTwo.targettedHero == 3)
-            {
-                dmgHeroTakes = enemyNetBattleDamage(slimeTwo.AtkDmg, userArcher.armor, userArcher);
-                userArcher.currentHealth = userArcher.currentHealth - dmgHeroTakes;
-                cout << slimeTwo.slimeName << " used " << slimeTwo.abilityUsed << " on (Archer) " << userArcher.archName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userArcher.currentLimit = userArcher.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 2;
-            }
-        }
 
             if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
             {
                 cout << "Your heroes have been defeated" << endl;
+                stageCompleted = false;
                 break;
             }
 
-        // SlimeThree's Turn /
-        if (slimeThree.isEnemyAlive == true)
-        {
-            cout << "Slime(3)'s Turn" << endl;
-            slimeThree.callRandomAbility();
-            slimeThree.selectRandomTarget(userWarrior, userMage, userArcher);
-            if (slimeThree.targettedHero == 1)
+            // SlimeThree's Turn /
+            if (slimeThree.isEnemyAlive == true)
             {
-                dmgHeroTakes = enemyNetBattleDamage(slimeThree.AtkDmg, userWarrior.armor, userArcher);
-                userWarrior.currentHealth = userWarrior.currentHealth - dmgHeroTakes;
-                cout << slimeThree.slimeName << " used " << slimeThree.abilityUsed << " on (Warrior) " << userWarrior.warName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userWarrior.currentLimit = userWarrior.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 3;
+                cout << "Slime(3)'s Turn" << endl;
+                slimeThree.callRandomAbility();
+                slimeThree.selectRandomTarget(userWarrior, userMage, userArcher);
+                if (slimeThree.targettedHero == 1)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeThree.AtkDmg, userWarrior.armor, userArcher);
+                    userWarrior.currentHealth = userWarrior.currentHealth - dmgHeroTakes;
+                    cout << slimeThree.slimeName << " used " << slimeThree.abilityUsed << " on (Warrior) " << userWarrior.warName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userWarrior.currentLimit = userWarrior.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 3;
+                }
+                else if (slimeThree.targettedHero == 2)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeThree.AtkDmg, userMage.armor, userArcher);
+                    userMage.currentHealth = userMage.currentHealth - dmgHeroTakes;
+                    cout << slimeThree.slimeName << " used " << slimeThree.abilityUsed << " on (Mage) " << userMage.mageName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userMage.currentLimit = userMage.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 3;
+                }
+                else if (slimeThree.targettedHero == 3)
+                {
+                    dmgHeroTakes = enemyNetBattleDamage(slimeThree.AtkDmg, userArcher.armor, userArcher);
+                    userArcher.currentHealth = userArcher.currentHealth - dmgHeroTakes;
+                    cout << slimeThree.slimeName << " used " << slimeThree.abilityUsed << " on (Archer) " << userArcher.archName
+                        << " (" << dmgHeroTakes << " dmg)" << endl;
+                    userArcher.currentLimit = userArcher.currentLimit + (dmgHeroTakes * 0.5);
+                    displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
+                    slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 3;
+                }
             }
-            else if (slimeThree.targettedHero == 2)
-            {
-                dmgHeroTakes = enemyNetBattleDamage(slimeThree.AtkDmg, userMage.armor, userArcher);
-                userMage.currentHealth = userMage.currentHealth - dmgHeroTakes;
-                cout << slimeThree.slimeName << " used " << slimeThree.abilityUsed << " on (Mage) " << userMage.mageName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userMage.currentLimit = userMage.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 3;
-            }
-            else if (slimeThree.targettedHero == 3)
-            {
-                dmgHeroTakes = enemyNetBattleDamage(slimeThree.AtkDmg, userArcher.armor, userArcher);
-                userArcher.currentHealth = userArcher.currentHealth - dmgHeroTakes;
-                cout << slimeThree.slimeName << " used " << slimeThree.abilityUsed << " on (Archer) " << userArcher.archName
-                     << " (" << dmgHeroTakes << " dmg)" << endl;
-                userArcher.currentLimit = userArcher.currentLimit + (dmgHeroTakes * 0.5);
-                displayBattleStatsStage1(userWarrior, userMage, userArcher, slimeOne, slimeTwo, slimeThree);
-                slimeOne.turnsUsed = slimeTwo.turnsUsed = slimeThree.turnsUsed = 3;
-            }
-        }
 
             if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
             {
                 cout << "Your heroes have been defeated" << endl;
+                stageCompleted = false;
                 break;
             }
 
@@ -2232,6 +2251,16 @@ alive
             cin >> continueDialogue;
             cout << endl;
 
+            userWarrior.check_set_HeroAlive();
+            userMage.check_set_HeroAlive();
+            userArcher.check_set_HeroAlive();
+            if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
+            {
+                cout << "Your heroes have been defeated" << endl;
+                stageCompleted = false;
+                break;
+            }
+
             roundNum++;
         }
 
@@ -2244,7 +2273,7 @@ turn makes them stronger
 * I created a display to show by what amount each of the heroes' stats
 increased
 */
-        if (stageCompleted = true)
+        if (stageCompleted == true)
         {
             cout << "Great job, " << userName << " ";
             cin >> continueDialogue;
@@ -2650,6 +2679,7 @@ user to the heroes' abilities and the type advantage/disadvantage system
             if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
             {
                 cout << "Your heroes have been defeated" << endl;
+                stageCompleted = false;
                 break;
             }
 
@@ -2698,6 +2728,7 @@ user to the heroes' abilities and the type advantage/disadvantage system
             if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
             {
                 cout << "Your heroes have been defeated" << endl;
+                stageCompleted = false;
                 break;
             }
 
@@ -2746,6 +2777,7 @@ user to the heroes' abilities and the type advantage/disadvantage system
             if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
             {
                 cout << "Your heroes have been defeated" << endl;
+                stageCompleted = false;
                 break;
             }
 
@@ -3085,6 +3117,7 @@ how they utilize their abilities otherwise it can easily turn into a defeat
                 if (userHeroes.areHeroesAlive(userWarrior, userMage, userArcher) == false)
                 {
                     cout << "Your heroes have been defeated" << endl;
+                    stageCompleted = false;
                     break;
                 }
 
